@@ -24,14 +24,16 @@ function start() {
         name: "Welcome",
         type: "list",
         message: "Hello! What would you like to do?",
-        choices: ["View All Employees", "Add Employee", "Update Role"]
+        choices: ["View All Employees", "Add An Employee","View Departments", "Update Employee Role"]
 
 
     }).then(function (answer) {
         if (answer.Welcome === "View All Employees") {
             viewEmployees();
-        } else if (answer.Welcome === "Add Emplyee") {
+        } else if (answer.Welcome === "Add An Empolyee") {
             // addEmployee();
+        } else if (answer.Welcome === "View Departments"){
+            viewDepartments();
         } else {
             //update role function
         }
@@ -47,6 +49,14 @@ function viewEmployees() {
     })
 
 };
+
+function viewDepartments(){
+    connection.query('SELECT * FROM department', function (err, results){
+        if(err) throw err;
+        console.table(results)
+        start();
+    })
+}
 
 // function addEmployee(){
 //     connection.query(`INSERT INTO employee (first_name, last_name, role_id) 

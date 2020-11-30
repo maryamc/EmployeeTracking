@@ -1,7 +1,20 @@
 /* Seeds for SQL table. We haven't discussed this type of file yet */
 USE employeetracker_db;
 
-/* Insert 3 Rows into your new table */
+-- Departments
+INSERT INTO department (name)
+VALUES ("Engineering");
+INSERT INTO department (name)
+VALUES ("Marketing");
+INSERT INTO department (name)
+VALUES ("Human Resources");
+INSERT INTO department (name)
+VALUES ("Finance");
+
+-- Roles
+
+
+-- Employees
 INSERT INTO employee (first_name, last_name, role_id)
 VALUES ("Leeroy", "Jenkins", "null");
 
