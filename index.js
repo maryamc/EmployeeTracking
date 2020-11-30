@@ -37,7 +37,7 @@ function start() {
         } else if (answer.Welcome === "View All Roles") {
             viewRoles();
         } else if (answer.Welcome === "Add A Department") {
-            //department adding function
+            addDepartment();
         } else if (answer.Welcome === "Add A Role") {
             addRole();
         } else if (answer.Welcome === "Update Employee Role") {
@@ -76,6 +76,8 @@ function viewRoles() {
     })
 }
 
+//function for addding employee
+// for some reason the command line freezes on my VS code when trying to run this option? still not fixed not sure whats wrong
 function addEmployee() {
     inquirer.prompt([
         {
@@ -95,7 +97,7 @@ function addEmployee() {
         }
     ]).then(function (answer) {
         connection.query(`INSERT INTO employee (first_name, last_name, role_id) 
-        VALUES ('${answer.first}', '${answer.last}', '${answer.role_id}')`, function (err) {
+        VALUES ('${answer.first}', '${answer.last}', '${answer.role_id}')`, function (err, results) {
             if (err) throw err;
             console.log("Successfully added " + answer.first + " " + answer.last + "!")
             start();
@@ -131,6 +133,23 @@ function addRole(){
     })
 }
 
+// function for adding departments
+function addDepartment(){
+    inquirer.prompt([
+        {
+            type:"input",
+            name: "name",
+            message: "Enter department name you wish to add"
+        }
+    ]).then(function (answer){
+        connection.query(`INSERT INTO department (name)
+        VALUES ('${answer.name}')`, function (err, results){
+            if (err) throw err;
+            console.log("Successfully added " + answer.name + " as a new department!")
+            start();
+        });
+    })
+}
 
 // Updating employee roles
 
