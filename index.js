@@ -24,32 +24,33 @@ function start() {
         name: "Welcome",
         type: "list",
         message: "Hello! Welcome to the employee tracking application, what would you like to do?",
-        choices: ["View All Employees", "View All Roles", "View Departments", "Add An Employee", "Add A Role", "Add A Department", "Update Employee Role"]
+        choices: ["View All Employees", "View All Roles", "View Departments", "Add An Employee", "Add A Role", "Add A Department", "Update Employee Role", "EXIT"]
 
 
     }).then(function (answer) {
         if (answer.Welcome === "View All Employees") {
-            viewEmployees();
+            viewEmployee();
         } else if (answer.Welcome === "Add An Empolyee") {
             addEmployee();
         } else if (answer.Welcome === "View Departments") {
-            viewDepartments();
+            viewDepartment();
         } else if (answer.Welcome === "View All Roles") {
-            viewRoles();
+            viewRole();
         } else if (answer.Welcome === "Add A Department") {
             addDepartment();
         } else if (answer.Welcome === "Add A Role") {
             addRole();
         } else if (answer.Welcome === "Update Employee Role") {
-            //update role function
-        } else {
+            updateRole();
+        } 
+        else if (answer.Welcome === "EXIT" ) {
             connection.end();
         }
     })
 }
 
 //function for viewing employees 
-function viewEmployees() {
+function viewEmployee() {
     connection.query(`SELECT employee.first_name,employee.last_name, role.title, role.salary FROM employee INNER JOIN role ON employee.role_id=role.id;`, function (err, results) {
         if (err) throw err;
         console.table(results)
@@ -59,7 +60,7 @@ function viewEmployees() {
 };
 
 // function for viewing departments
-function viewDepartments() {
+function viewDepartment() {
     connection.query('SELECT * FROM department', function (err, results) {
         if (err) throw err;
         console.table(results)
@@ -68,7 +69,7 @@ function viewDepartments() {
 }
 
 //function for viewing roles
-function viewRoles() {
+function viewRole() {
     connection.query('SELECT * FROM role', function (err, results) {
         if (err) throw err;
         console.table(results)
@@ -78,6 +79,7 @@ function viewRoles() {
 
 //function for addding employee
 // for some reason the command line freezes on my VS code when trying to run this option? still not fixed not sure whats wrong
+// trying to use template literals here so it should work but idk
 function addEmployee() {
     inquirer.prompt([
         {
@@ -152,4 +154,33 @@ function addDepartment(){
 }
 
 // Updating employee roles
+//initially did rawlist for type but didnt want to create a whole choice array loop, maybe next time 
+//keeping it basic for now 
+//syntax error for sql
+function updateRole () {
+    inquirer.prompt([
+        {
+            type: "input",
+            name: "firstName",
+            message: "Enter first name"
+        },
+        {
+            type:"input",
+            name: "lastName",
+            message:"Enter last name"
+        },
+        {
+            type: "input",
+            name: "role_id",
+            message:"Enter the new role id"
+        }
+    ]).then(function(answer){
+        connection.query(`UPDATE employee SET role_id = employee.first_name, employee.last_name WHERE ${answer.firstName},${answer.lastName}, ${answer.role_id} = role_id` , function (err, results){
+            if(err) throw err;
+            console.log("Successfully updated " + answer.firstName + answer.lastName +  "'s role!")
+            start();
+        });
+    })
+
+}
 
