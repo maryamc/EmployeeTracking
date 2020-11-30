@@ -24,24 +24,26 @@ function start() {
         name: "Welcome",
         type: "list",
         message: "Hello! Welcome to the employee tracking application, what would you like to do?",
-        choices: ["View All Employees", "View All Roles", "View Departments","Add An Employee","Add A Role", "Add A Department", "Update Employee Role"]
+        choices: ["View All Employees", "View All Roles", "View Departments", "Add An Employee", "Add A Role", "Add A Department", "Update Employee Role"]
 
 
     }).then(function (answer) {
         if (answer.Welcome === "View All Employees") {
             viewEmployees();
         } else if (answer.Welcome === "Add An Empolyee") {
-            // addEmployee();
-        } else if (answer.Welcome === "View Departments"){
+            addEmployee();
+        } else if (answer.Welcome === "View Departments") {
             viewDepartments();
         } else if (answer.Welcome === "View All Roles") {
             viewRoles();
-        } else if (answer.Welcome === "Add A Department"){
+        } else if (answer.Welcome === "Add A Department") {
             //department adding function
-        } else if (answer.Welcome === "Add A Role"){
-            // role adding function
-        } else {
+        } else if (answer.Welcome === "Add A Role") {
+            addRole();
+        } else if (answer.Welcome === "Update Employee Role") {
             //update role function
+        } else {
+            connection.end();
         }
     })
 }
@@ -57,32 +59,77 @@ function viewEmployees() {
 };
 
 // function for viewing departments
-function viewDepartments(){
-    connection.query('SELECT * FROM department', function (err, results){
-        if(err) throw err;
-        console.table(results)
-        start();
-    })
-}
-
-//function for viewing roles
-function viewRoles (){
-    connection.query('SELECT * FROM role', function (err, results){
+function viewDepartments() {
+    connection.query('SELECT * FROM department', function (err, results) {
         if (err) throw err;
         console.table(results)
         start();
     })
 }
 
-// function addEmployee(){
-//     connection.query(`INSERT INTO employee (first_name, last_name, role_id) 
-//     VALUES ('Leeroy','Jenkins',1)`, function(err){
-//         if(err) throw err;
-//         start();
-//     });
-//     // inquirer.prompt above connection.query 
-// };
+//function for viewing roles
+function viewRoles() {
+    connection.query('SELECT * FROM role', function (err, results) {
+        if (err) throw err;
+        console.table(results)
+        start();
+    })
+}
 
+function addEmployee() {
+    inquirer.prompt([
+        {
+            type: "input",
+            name: "first",
+            message: "Enter employees first name"
+        },
+        {
+            type: "input",
+            name: "last",
+            message: "Enter employees last name"
+        },
+        {
+            type: "input",
+            name: "role_id",
+            message: "Enter employees role id"
+        }
+    ]).then(function (answer) {
+        connection.query(`INSERT INTO employee (first_name, last_name, role_id) 
+        VALUES ('${answer.first}', '${answer.last}', '${answer.role_id}')`, function (err) {
+            if (err) throw err;
+            console.log("Successfully added " + answer.first + " " + answer.last + "!")
+            start();
+        });
+    })
+};
+
+//function for adding roles
+function addRole(){
+    inquirer.prompt([
+        {
+            type:"input",
+            name:"title",
+            message: "What is the role title?"
+        },
+        {
+            type:"input",
+            name:"salary",
+            message: "What is the annual salary?"
+        },
+        {
+            type:"input",
+            name:"department_id",
+            message: "What is the department id?"
+        }
+    ]).then(function(answer){
+        connection.query(`INSERT INTO role (title, salary, department_id)
+        VALUES ('${answer.title}', '${answer.salary}','${answer.department_id}')`, function (err, results) {
+            if (err) throw err;
+            console.log("Successfully added " + answer.title + " as a new role!");
+            start();
+        });
+    })
+}
 
 
 // Updating employee roles
