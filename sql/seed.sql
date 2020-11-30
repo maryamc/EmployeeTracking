@@ -30,12 +30,3 @@ INSERT INTO employee (first_name, last_name, role_id)
 VALUES ("Levy", "Tate", "3");
 INSERT INTO employee (first_name, last_name, role_id)
 VALUES ("Olive", "Garden", "4");
--- INSERT INTO colleges (name)
--- VALUES ("Boston College");
-
--- INSERT INTO colleges (name)
--- VALUES ("Harvard");
-
-/* OR */
--- INSERT INTO colleges (name)
--- VALUES ("Emerson"), ("Northeastern"), ("MIT");
