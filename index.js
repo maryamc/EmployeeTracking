@@ -30,7 +30,7 @@ function start() {
     }).then(function (answer) {
         if (answer.Welcome === "View All Employees") {
             viewEmployee();
-        } else if (answer.Welcome === "Add An Empolyee") {
+        } else if (answer.Welcome === "Add An Employee") {
             addEmployee();
         } else if (answer.Welcome === "View Departments") {
             viewDepartment();
@@ -42,8 +42,8 @@ function start() {
             addRole();
         } else if (answer.Welcome === "Update Employee Role") {
             updateRole();
-        } 
-        else if (answer.Welcome === "EXIT" ) {
+        }
+        else if (answer.Welcome === "EXIT") {
             connection.end();
         }
     })
@@ -108,24 +108,24 @@ function addEmployee() {
 };
 
 //function for adding roles
-function addRole(){
+function addRole() {
     inquirer.prompt([
         {
-            type:"input",
-            name:"title",
+            type: "input",
+            name: "title",
             message: "What is the role title?"
         },
         {
-            type:"input",
-            name:"salary",
+            type: "input",
+            name: "salary",
             message: "What is the annual salary?"
         },
         {
-            type:"input",
-            name:"department_id",
+            type: "input",
+            name: "department_id",
             message: "What is the department id?"
         }
-    ]).then(function(answer){
+    ]).then(function (answer) {
         connection.query(`INSERT INTO role (title, salary, department_id)
         VALUES ('${answer.title}', '${answer.salary}','${answer.department_id}')`, function (err, results) {
             if (err) throw err;
@@ -136,16 +136,16 @@ function addRole(){
 }
 
 // function for adding departments
-function addDepartment(){
+function addDepartment() {
     inquirer.prompt([
         {
-            type:"input",
+            type: "input",
             name: "name",
             message: "Enter department name you wish to add"
         }
-    ]).then(function (answer){
+    ]).then(function (answer) {
         connection.query(`INSERT INTO department (name)
-        VALUES ('${answer.name}')`, function (err, results){
+        VALUES ('${answer.name}')`, function (err, results) {
             if (err) throw err;
             console.log("Successfully added " + answer.name + " as a new department!")
             start();
@@ -157,7 +157,7 @@ function addDepartment(){
 //initially did rawlist for type but didnt want to create a whole choice array loop, maybe next time 
 //keeping it basic for now 
 //syntax error for sql
-function updateRole () {
+function updateRole() {
     inquirer.prompt([
         {
             type: "input",
@@ -165,22 +165,27 @@ function updateRole () {
             message: "Enter first name"
         },
         {
-            type:"input",
+            type: "input",
             name: "lastName",
-            message:"Enter last name"
+            message: "Enter last name"
         },
         {
             type: "input",
             name: "role_id",
-            message:"Enter the new role id"
+            message: "Enter the new role id"
         }
-    ]).then(function(answer){
-        connection.query(`UPDATE employee SET role_id = employee.first_name, employee.last_name WHERE ${answer.firstName},${answer.lastName}, ${answer.role_id} = role_id` , function (err, results){
-            if(err) throw err;
-            console.log("Successfully updated " + answer.firstName + answer.lastName +  "'s role!")
+    ]).then(function (answer) {
+        connection.query(`UPDATE employee 
+        SET role_id = ${answer.role_id} 
+        WHERE first_name = "${answer.firstName}" and last_name = "${answer.lastName}"`, function (err, results) {
+            if (err) throw err;
+            console.log(`Successfully updated ${answer.firstName} ${answer.lastName}'s role!`)
             start();
         });
     })
 
 }
 
+// UPDATE employee
+// SET role_id = 5
+// WHERE first_name = "Leeroy" and last_name = "Jenkins";
